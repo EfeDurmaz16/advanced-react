@@ -44,8 +44,36 @@ const Header = () => {
     }
   };
 
+  const headerRef = useRef(null);
+  const prevScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (headerRef.current) {
+        if (currentScrollY > prevScrollY.current) {
+          // Scrolling down
+          headerRef.current.style.transform = "translateY(-200px)";
+        } else {
+          // Scrolling up
+          headerRef.current.style.transform = "translateY(0)";
+        }
+      }
+      
+      prevScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <Box
+      ref = {headerRef}
       position="fixed"
       top={0}
       left={0}

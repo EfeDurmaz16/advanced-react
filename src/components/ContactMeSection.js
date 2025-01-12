@@ -21,13 +21,14 @@ const LandingSection = () => {
   const {isLoading, response, submit} = useSubmit();
   const { onOpen } = useAlertContext();
 
+  
+
   const formik = useFormik({
     initialValues: {firstName: "", email: "", type: "", comment: ""},
     onSubmit: (values) => {
-      submit(values);
+      submit("" , values);
     },
 
-    
 
     validationSchema: Yup.object({
       firstName: Yup.string().required("Required"),
@@ -35,7 +36,24 @@ const LandingSection = () => {
       type: Yup.string().optional(),
       comment: Yup.string().min(25, "Must be at least 25 characters").required("Required"),
     }),
+
+
+    
   });
+
+  useEffect(() => {
+    if (response) {
+      onOpen(
+        response.type,
+        response.message
+      );
+      
+      if (response.type === "success") {
+        formik.resetForm();
+      }
+    }
+  }, [response]);
+
 
   return (
     <FullScreenSection
@@ -49,7 +67,7 @@ const LandingSection = () => {
           Contact me
         </Heading>
         <Box p={6} rounded="md" w="100%">
-          <form>
+          <form onSubmit={formik.handleSubmit}>
             <VStack spacing={4}>
               <FormControl isInvalid={formik.touched.firstName && formik.errors.firstName}>
                 <FormLabel htmlFor="firstName">Name</FormLabel>
@@ -92,7 +110,7 @@ const LandingSection = () => {
                 />
                 <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="purple" width="full">
+              <Button type="submit" colorScheme="purple" width="full" isLoading={isLoading}>
                 Submit
               </Button>
             </VStack>
