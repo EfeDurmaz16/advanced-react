@@ -17,7 +17,7 @@ import FullScreenSection from "./FullScreenSection";
 import useSubmit from "../hooks/useSubmit";
 import {useAlertContext} from "../context/alertContext";
 
-const LandingSection = () => {
+const LandingSection = () => { 
   const {isLoading, response, submit} = useSubmit();
   const { onOpen } = useAlertContext();
 
